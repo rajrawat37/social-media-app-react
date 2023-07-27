@@ -17,6 +17,7 @@ const Login = () => {
     const decoded = jwt_decode(response.credential);
     
     localStorage.setItem('user',JSON.stringify(decoded));
+
     const { name ,picture , sub} = decoded;
 
     const doc = {
@@ -25,6 +26,7 @@ const Login = () => {
         userName: name,
         image: picture,
     }
+    
     client.createIfNotExists(doc)
           .then(()=>{
             navigate('/',{replace:true})
