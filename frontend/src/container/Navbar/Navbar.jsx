@@ -5,28 +5,29 @@ import {
   IoSearch,
 } from "react-icons/io5";
 import { AiFillCloseCircle } from "react-icons/ai";
-
+import { Sling as Hamburger } from "hamburger-react";
 import React, { useState, useRef, useEffect } from "react";
 
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../../components";
 
-const Navbar = ({user}) => {
-
+const Navbar = ({ user }) => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
 
   const handleCloseSidebar = () => {
-    if(closeToggle)
-      closeToggle(false);
-  }
+    setToggleSidebar(!toggleSidebar);
+    console.log("Sidebar is clicked: ", toggleSidebar);
+  };
   return (
     <>
-      <div className="flex w-1/6  justify-between p-2 items-center">
-        <HiMenu
-          fontSize={30}
-          className=" cursor-pointer"
-          onClick={()=>handleCloseSidebar}
+      <div className="flex w-1/6 bg-white  justify-between p-2 items-center">
+        <Hamburger
+          size={20}
+          easing="ease-in"
+          toggled={toggleSidebar}
+          toggle={setToggleSidebar}
+          onClick={() => handleCloseSidebar()}
         />
         <Link to="/">
           <img
@@ -37,28 +38,31 @@ const Navbar = ({user}) => {
         </Link>
       </div>
 
-      <div className="flex  p-2 w-5/6  justify-between">
+      <div className="flex  p-2 w-5/6 bg-white justify-between">
         <div class=" w-5/6">
-          <form>
-              <div class="flex bg-gray-200 rounded-3xl">
-                <div class="flex rounded-3xl outline-none overflow-hidden w-full">
-                  <IoSearch
-                    fontSize={25}
-                    className=" mt-2 ml-2 cursor-pointer rounded-md "
-                  />
-                  <input
-                    type="text"
-                    class="w-full p-2  rounded-md outline-none bg-gray-200 rounded-r-none "
-                  />
-                  <button class="bg-green-300 text-white px-6 text-lg font-semibold rounded-r-md">
-                    Go
-                  </button>
-                </div>
-              </div>
-          </form>
+          <div class=" flex text-gray-600 ">
+            <input
+              type="search"
+              name="serch"
+              placeholder="Search"
+              class="bg-gray-100 h-10 mt-1 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
+            />
+            <IoSearch
+              fontSize={25}
+              className=" mt-3 -ml-8 cursor-pointer bg-gray-100 rounded-full "
+            />
+          </div>
         </div>
-        <IoAddCircleOutline fontSize={25} className="mt-2  cursor-pointer " />
-        <IoBookmarksOutline fontSize={25} className="mt-2 cursor-pointer " />
+        <IoAddCircleOutline
+          fontSize={25}
+          color="white"
+          className="mt-2  cursor-pointer "
+        />
+        <IoBookmarksOutline
+          fontSize={25}
+          color="white"
+          className="mt-2 cursor-pointer "
+        />
         <div className="mr-3">
           <Link to={`user-profile/${user?._id}`}>
             <img src={user?.image} alt="logo" className="w-10 rounded-full " />
@@ -66,17 +70,19 @@ const Navbar = ({user}) => {
         </div>
       </div>
       {toggleSidebar && (
-          <div className="fixed w-1/4 bg-white overflow-y-auto h-screen shadow-md z-10 animate-slide-in">
-            <div className="absolute w-full flex justify-end items-center p-2">
-              <AiFillCloseCircle
-                fontSize={30}
-                className="cursor-pointer "
-                onClick={() => setToggleSidebar(false)}
-              />
-            </div>
-            <Sidebar user={user && user} closeToggle={setToggleSidebar} />
+        <div className="fixed w-1/6  overflow-y-auto h-screen shadow-md z-10 animate-slide-in">
+          <div className="absolute w-full flex justify-end items-center p-2">
+            <Hamburger
+              size={20}
+              easing="ease-in"
+              toggled={toggleSidebar}
+              toggle={setToggleSidebar}
+              onClick={() => handleCloseSidebar()}
+            />
           </div>
-        )}
+          <Sidebar user={user && user} closeToggle={setToggleSidebar} />
+        </div>
+      )}
     </>
   );
 };

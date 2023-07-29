@@ -39,11 +39,11 @@ const Home = () => {
   return (
     <div className="bg-gray-50 flex-col duration-75 ease-out">
       <div className="flex flex-row w-full  shadow-md">
-        <Navbar user={user && user}  />
+        <Navbar user={user && user}   />
       </div>
 
       <div
-        className="pb-2 flex-1 bg-red-500 h-screen overflow-y-scroll"
+        className="pb-2 flex-1  h-screen overflow-y-scroll"
         ref={scrollRef}
       >
         <Routes>
