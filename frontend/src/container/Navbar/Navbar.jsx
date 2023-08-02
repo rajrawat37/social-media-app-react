@@ -5,15 +5,20 @@ import {
   IoSearch,
 } from "react-icons/io5";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { BiPlus } from "react-icons/bi";
 import { Sling as Hamburger } from "hamburger-react";
 import React, { useState, useRef, useEffect } from "react";
 
 import logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Sidebar } from "../../components";
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, searchTerm, setSearchTerm }) => {
+  const navigate = useNavigate();
+
   const [toggleSidebar, setToggleSidebar] = useState(false);
+
+  if (!user) return null;
 
   const handleCloseSidebar = () => {
     setToggleSidebar(!toggleSidebar);
@@ -42,14 +47,16 @@ const Navbar = ({ user }) => {
         <div class=" w-5/6">
           <div class=" flex text-gray-600 ">
             <input
-              type="search"
-              name="serch"
+              type="text"
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search"
+              value={searchTerm}
+              onFocus={() => navigate("/Search")}
               class="bg-gray-100 h-10 mt-1 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
             />
             <IoSearch
-              fontSize={25}
-              className=" mt-3 -ml-8 cursor-pointer bg-gray-100 rounded-full "
+              fontSize={22}
+              className=" mt-3   -ml-8 cursor-pointer bg-gray-100 rounded-full "
             />
           </div>
         </div>
@@ -63,6 +70,13 @@ const Navbar = ({ user }) => {
           color="white"
           className="mt-2 cursor-pointer "
         />
+        <Link to="create-pin">
+          <BiPlus
+            fontSize={25}
+            color="bg-gray-100"
+            className="mt-2 mr-8 cursor-pointer"
+          />
+        </Link>
         <div className="mr-3">
           <Link to={`user-profile/${user?._id}`}>
             <img src={user?.image} alt="logo" className="w-10 rounded-full " />
