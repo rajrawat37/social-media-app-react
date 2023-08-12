@@ -1,5 +1,5 @@
 import React from "react";
-import { MutatingDots, Dna } from "react-loader-spinner";
+import { Dna } from "react-loader-spinner";
 
 function Spinner({ message }) {
   return (

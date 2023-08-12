@@ -9,9 +9,8 @@ import { BiPlus } from "react-icons/bi";
 import { Sling as Hamburger } from "hamburger-react";
 import React, { useState, useRef, useEffect } from "react";
 
-import logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { Sidebar } from "../../components";
+import { Sidebar } from ".";
 
 const Navbar = ({ user, searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();
@@ -26,24 +25,7 @@ const Navbar = ({ user, searchTerm, setSearchTerm }) => {
   };
   return (
     <>
-      <div className="flex w-1/6 bg-white  justify-between p-2 items-center">
-        <Hamburger
-          size={20}
-          easing="ease-in"
-          toggled={toggleSidebar}
-          toggle={setToggleSidebar}
-          onClick={() => handleCloseSidebar()}
-        />
-        <Link to="/">
-          <img
-            src={logo}
-            alt="logo"
-            className="w-28  items-center mr-4 justify-center "
-          />
-        </Link>
-      </div>
-
-      <div className="flex  p-2 w-5/6 bg-white justify-between">
+      <div className="flex  py-2 w-full bg-white justify-between">
         <div class=" w-5/6">
           <div class=" flex text-gray-600 ">
             <input

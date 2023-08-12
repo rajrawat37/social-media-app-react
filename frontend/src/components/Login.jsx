@@ -3,7 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin, googleLogout} from '@react-oauth/google'
 import { useNavigate } from "react-router-dom";
 import shareVideo from "../assets/share.mp4";
-import logo from "../assets/logowhite.png";
+import homeLogo from "../assets/homeLogo.png";
 import jwt_decode from 'jwt-decode';
 import { client } from '../client';
 import "../index.css";
@@ -56,7 +56,7 @@ const Login = () => {
         </div>
         <div className="absolute flex flex-col justify-center items-center backdrop-brightness-50 w-full h-full">
           <div className="">
-            <img src={logo} alt="logo" width="130px" />
+            <img src={homeLogo} alt="logo" width="130px" />
           </div>
           <div className="shadow-2xl mt-3 flex rounded-lg bg-white">
           {user ? (

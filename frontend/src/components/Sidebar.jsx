@@ -1,95 +1,65 @@
-import React from "react";
-import { NavLink, Link } from "react-router-dom";
-import { RiHomeFill } from "react-icons/ri";
-import { IoIosArrowForward } from "react-icons/io";
-import { HiMenu, HiHome } from "react-icons/hi";
-import { AiFillCloseCircle } from "react-icons/ai";
+import React from 'react';
+import { NavLink, Link } from 'react-router-dom';
+import { RiHomeFill } from 'react-icons/ri';
+import { IoIosArrowForward } from 'react-icons/io';
+import homeLogo from '../assets/homeLogo.png';
+import { categories } from '../utils/data';
 
-import logo from "../assets/logo.png";
+const isNotActiveStyle = 'flex items-center px-5 gap-3 text-gray-500 hover:text-black transition-all duration-200 ease-in-out capitalize';
+const isActiveStyle = 'flex items-center px-5 gap-3 font-extrabold border-r-2 border-black  transition-all duration-200 ease-in-out capitalize';
 
-function Sidebar({ user, setToggleSidebar }) {
-  const categories = [
-    { name: "Animals" },
-    { name: "Beauty" },
-    { name: "Coding" },
-    { name: "Gaming " },
-    { name: "Entertainment" },
-    { name: "Education" },
-    { name: "Photography" },
-    { name: "Travel" },
-    { name: "Wallpapers" },
-  ];
-
+const Sidebar = ({ closeToggle, user }) => {
   const handleCloseSidebar = () => {
-     setToggleSidebar(false);
+    if (closeToggle) closeToggle(false);
   };
 
   return (
-    <>
-      <div class="min-h-screen  flex flex-row bg-white">
-        <div class="flex flex-col w-56 bg-white rounded-r-3xl overflow-hidden">
-          <div class="flex items-center justify-center h-16  shadow-md">
-            <h1 class="text-xl uppercase text-indigo-500">Logo</h1>
-          </div>
-          <li>
-            <Link
-              to="/"
-              onClick={() => handleCloseSidebar()}
-              className="flex flex-row items-center h-12 transform hover:bg-blue-100 rounded-full mt-2 mx-2 transition-transform ease-in-out duration-200 text-gray-500 hover:text-gray-800"
+    <div className="flex flex-col justify-between bg-white h-full overflow-y-scroll min-w-210 hide-scrollbar">
+      <div className="flex flex-col">
+        <Link
+          to="/"
+          className="flex px-5 gap-2  pt-1 w-190 items-center"
+          onClick={handleCloseSidebar}
+        >
+          <img src={homeLogo} alt="logo" className="w-32" />
+        </Link>
+        <div className="flex flex-col gap-5">
+
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? isActiveStyle : isNotActiveStyle)}
+            onClick={handleCloseSidebar}
+          >
+            <RiHomeFill />
+            Home
+          </NavLink>
+          <h3 className="mt-2 px-5 text-base 2xl:text-xl">Discover cateogries</h3>
+          {categories.slice(0, categories.length - 1).map((category) => (
+            <NavLink
+              to={`/category/${category.name}`}
+              className={({ isActive }) => (isActive ? isActiveStyle : isNotActiveStyle)}
+              onClick={handleCloseSidebar}
+              key={category.name}
             >
-              <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
-                <i class="bx bx-home"></i>
-              </span>
-              <span class="text-sm font-bold">Home</span>
-            </Link>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex flex-row items-center h-12 text-gray-500 hover:text-gray-800"
-            >
-              <span class="ml-2 inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
-                <i class="bx bx-globe"></i>
-              </span>
-              <span class="text-sm font-medium">Discover Categories</span>
-            </a>
-          </li>
-          <div class="flex flex-col ">
-            {categories.slice(0, categories.length - 1).map((category) => (
-              <div>
-                <Link
-                  to={`/category/${category.name}`}
-                  onClick={() => handleCloseSidebar()}
-                  className="flex flex-row items-center h-12 transform hover:bg-indigo-200 rounded-full mt-2 mx-2  hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800"
-                >
-                  <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
-                    {/* Map icons here for the categories */}
-                  </span>
-                  <span class="text-sm font-bold">{`${category.name}`}</span>
-                </Link>
-              </div>
-            ))}
-          </div>
-          {user && (
-            <div className="flex items-center justify-center mt-4 bg-white shadow-lg  cursor-pointer ml-4 py-2">
-              <Link
-                to={`user-profile/${user?._id}`}
-                className=""
-                onClick={() => handleCloseSidebar()}
-              >
-                <img
-                  src={user.image}
-                  className="w-6 h-6 rounded-full"
-                  alt="user-profile"
-                />
-              </Link>
-              <div className="text-sm ml-2">{user.userName}</div>
-            </div>
-          )}
+              <img src={category.image} className="w-8 h-8 rounded-full shadow-sm" />
+              {category.name}
+            </NavLink>
+          ))}
         </div>
       </div>
-    </>
+      {user && (
+        <Link
+          to={`user-profile/${user._id}`}
+          className="flex my-5 mb-3 gap-2 p-2 items-center bg-white rounded-lg shadow-lg mx-3"
+          onClick={handleCloseSidebar}
+        >
+          <img src={user.image} className="w-8 h-8 rounded-full shadow-lg" alt="user-profile" />
+          <p>{user.userName}</p>
+          <IoIosArrowForward />
+        </Link>
+      )}
+    </div>
   );
-}
+};
 
 export default Sidebar;
