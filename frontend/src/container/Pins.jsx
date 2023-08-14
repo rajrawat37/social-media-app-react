@@ -7,7 +7,7 @@ function Pins({ user }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div className="">
+    <>
       <div className="bg-gray-50">
         <Navbar
           searchTerm={searchTerm}
@@ -15,7 +15,7 @@ function Pins({ user }) {
           user={user && user}
         />
       </div>
-      <div className="h-full">
+      <div className="max-h-max ">
         <Routes>
           <Route path="/" element={<Feed />}></Route>
           <Route path="/category/:categoryId" element={<Feed />}></Route>
@@ -32,7 +32,7 @@ function Pins({ user }) {
           ></Route>
         </Routes>
       </div>
-    </div>
+    </>
   );
 }
 

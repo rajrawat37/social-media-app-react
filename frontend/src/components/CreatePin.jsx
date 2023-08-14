@@ -51,6 +51,7 @@ const CreatePin = ({ user }) => {
 
   const savePin = () => {
     if (title && about && destination && imageAsset?._id && category) {
+    
       const doc = {
         _type: "pin",
         title,
@@ -63,15 +64,19 @@ const CreatePin = ({ user }) => {
             _ref: imageAsset?._id,
           },
         },
-        userId: user._id,
+        userId: user?._id,
         postedBy: {
           _type: "postedBy",
-          _ref: user._id,
+          _ref: user?._id,
         },
         category,
       };
+
+      console.log("User doc is here " , doc);
+
       client.create(doc).then(() => {
         navigate("/");
+        window.location.reload();
       });
     } else {
       setFields(true);

@@ -37,10 +37,14 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="flex bg-gray-50 md:flex-row flex-col h-screen transition-height duration-75 ease-out">
-      <div className="hidden md:flex h-screen flex-initial">
+    <div className="flex bg-gray-50 md:flex-row  flex-col h-screen">
+      
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex h-screen ">
         <Sidebar user={user && user} />
       </div>
+
+      {/* Mobile Sidebar */}
       <div className="flex md:hidden  flex-row">
         <div className="p-2 w-full flex flex-row justify-between items-center shadow-md">
           <HiMenu
@@ -51,16 +55,10 @@ const Home = () => {
           <Link to="/">
             <img src={homeLogo} alt="logo" className="w-28" />
           </Link>
-          <Link to={`user-profile/${user?._id}`}>
-            <img
-              src={user?.image}
-              alt="user-pic"
-              className="w-9 h-9 rounded-full "
-            />
-          </Link>
+          
         </div>
         {toggleSidebar && (
-          <div className="fixed w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 animate-slide-in">
+          <div className="fixed w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 transition duration-150 ease-in-out">
             <div className="absolute w-full flex justify-end items-center p-2">
               <AiFillCloseCircle
                 fontSize={30}
@@ -72,12 +70,14 @@ const Home = () => {
           </div>
         )}
       </div>
-      <div className="pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
+      
+      <div className="pb-2 flex-1 h-screen  overflow-y-scroll" ref={scrollRef}>
         <Routes>
           <Route path="/user-profile/:userId" element={<UserProfile />} />
           <Route path="/*" element={<Pins user={user && user} />} />
         </Routes>
       </div>
+      
     </div>
   );
 };

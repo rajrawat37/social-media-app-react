@@ -14,24 +14,34 @@ const Pin = ({ pin }) => {
   const navigate = useNavigate();
 
   const { postedBy, image, _id, destination } = pin;
-
+  
+  // console.log("Pin received  : " ,pin);
+  
+  //to extract user from browser's local storage
   const user =
     localStorage.getItem("user") !== "undefined"
       ? JSON.parse(localStorage.getItem("user"))
       : localStorage.clear();
 
+    // console.log(postHovered , "hello it is hovered");
+
+  // function to delete Pin
   const deletePin = (id) => {
     client.delete(id).then(() => {
       window.location.reload();
     });
   };
+  if(postHovered)
+  console.log(pin , "posted Id");
+  // console.log(user , "google id");
 
   let alreadySaved = pin?.save?.filter(
-    (item) => item?.postedBy?._id === user?.googleId
+    (item) => item?.postedBy?._id === user?.sub 
   );
 
   alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
 
+  // function to save Pin
   const savePin = (id) => {
     if (alreadySaved?.length === 0) {
       setSavingPost(true);
@@ -42,10 +52,10 @@ const Pin = ({ pin }) => {
         .insert("after", "save[-1]", [
           {
             _key: uuidv4(),
-            userId: user?.googleId,
+            userId: user?.sub,
             postedBy: {
               _type: "postedBy",
-              _ref: user?.googleId,
+              _ref: user?.sub,
             },
           },
         ])
@@ -63,11 +73,11 @@ const Pin = ({ pin }) => {
         onMouseEnter={() => setPostHovered(true)}
         onMouseLeave={() => setPostHovered(false)}
         onClick={() => navigate(`/pin-detail/${_id}`)}
-        className=" relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out"
+        className=" relative cursor-pointer mb-4 hover:shadow-lg overflow-hidden hover:scale-105 hover:opacity-80"
       >
         {image && (
           <img
-            className="rounded-lg w-full "
+            className="rounded-xl w-full "
             src={urlFor(image).width(250).url()}
             alt="user-post"
           />
@@ -78,6 +88,9 @@ const Pin = ({ pin }) => {
             style={{ height: "100%" }}
           >
             <div className="flex items-center justify-between">
+             
+              {/* Download icon */}
+             
               <div className="flex gap-2">
                 <a
                   href={`${image?.asset?.url}?dl=`}
@@ -90,6 +103,9 @@ const Pin = ({ pin }) => {
                   <MdDownloadForOffline />
                 </a>
               </div>
+
+              {/* Saved Icon */}
+              
               {alreadySaved?.length !== 0 ? (
                 <button
                   type="button"
@@ -110,6 +126,9 @@ const Pin = ({ pin }) => {
                 </button>
               )}
             </div>
+
+            {/* LinkIcon */}
+            
             <div className=" flex justify-between items-center gap-2 w-full">
               {destination?.slice(8).length > 0 ? (
                 <a
@@ -122,7 +141,11 @@ const Pin = ({ pin }) => {
                   <BsFillArrowUpRightCircleFill />
                 </a>
               ) : undefined}
-              {postedBy?._id === user?.googleId && (
+
+              {/* Delete Icon */}
+              
+              {JSON.stringify(postedBy?._id) ===
+                JSON.stringify(user?.sub) && (
                 <button
                   type="button"
                   onClick={(e) => {
@@ -138,7 +161,7 @@ const Pin = ({ pin }) => {
           </div>
         )}
       </div>
-      <Link
+      {/* <Link
         to={`/user-profile/${postedBy?._id}`}
         className="flex gap-2 mt-2 items-center"
       >
@@ -148,7 +171,7 @@ const Pin = ({ pin }) => {
           alt="user"
         />
         <p className="font-semibold capitalize">{postedBy?.userName}</p>
-      </Link>
+      </Link> */}
     </div>
   );
 };

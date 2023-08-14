@@ -38,7 +38,7 @@ const Navbar = ({ user, searchTerm, setSearchTerm }) => {
             />
             <IoSearch
               fontSize={22}
-              className=" mt-3   -ml-8 cursor-pointer bg-gray-100 rounded-full "
+              className=" mt-3  -ml-8  bg-gray-100 rounded-full "
             />
           </div>
         </div>
