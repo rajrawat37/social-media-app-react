@@ -15,7 +15,7 @@ const Pin = ({ pin }) => {
 
   const { postedBy, image, _id, destination } = pin;
   
-  // console.log("Pin received  : " ,pin);
+  console.log("Pin received  : " ,pin);
   
   //to extract user from browser's local storage
   const user =
@@ -23,7 +23,7 @@ const Pin = ({ pin }) => {
       ? JSON.parse(localStorage.getItem("user"))
       : localStorage.clear();
 
-    // console.log(postHovered , "hello it is hovered");
+    console.log(postHovered , "hello it is hovered");
 
   // function to delete Pin
   const deletePin = (id) => {
@@ -31,6 +31,7 @@ const Pin = ({ pin }) => {
       window.location.reload();
     });
   };
+
   if(postHovered)
   console.log(pin , "posted Id");
   // console.log(user , "google id");

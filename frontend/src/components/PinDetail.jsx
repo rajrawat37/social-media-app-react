@@ -7,6 +7,7 @@ import { client, urlFor } from "../client";
 import MasonryLayout from "./MasonryLayout";
 import { pinDetailMorePinQuery, pinDetailQuery } from "../utils/data";
 import Spinner from "./Spinner";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 const PinDetail = ({ user }) => {
   const { pinId } = useParams();
@@ -14,6 +15,8 @@ const PinDetail = ({ user }) => {
   const [pinDetail, setPinDetail] = useState();
   const [comment, setComment] = useState("");
   const [addingComment, setAddingComment] = useState(false);
+
+  console.log("user details are :", user?._id);
 
   const fetchPinDetails = () => {
     const query = pinDetailQuery(pinId);
@@ -47,7 +50,7 @@ const PinDetail = ({ user }) => {
           {
             comment,
             _key: uuidv4(),
-            postedBy: { _type: "postedBy", _ref: user?.sub },
+            postedBy: { _type: "postedBy", _ref: user?._id },
           },
         ])
         .commit()
@@ -62,13 +65,12 @@ const PinDetail = ({ user }) => {
   if (!pinDetail) {
     return <Spinner message="Showing pin" />;
   }
+  console.log("Hello it is here ", pinDetail);
 
   return (
     <>
       {pinDetail && (
-        <div
-          className="flex flex-col xl:flex-row w-full p-3 bg-white"
-        >
+        <div className="flex flex-col xl:flex-row w-full p-3 bg-white">
           <div className="flex justify-center max-w-lg items-center md:items-start flex-initial">
             <img
               className="rounded-t-lg mt-10 rounded-b-lg"
@@ -76,7 +78,8 @@ const PinDetail = ({ user }) => {
               alt="user-post"
             />
           </div>
-          <div className="w-full p-5 flex-1 xl:min-w-620">
+
+          <div className="w-full p-5  flex-1 xl:min-w-620">
             <div>
               <h1 className="text-4xl font-bold break-words mt-3">
                 {pinDetail.title}
@@ -84,39 +87,45 @@ const PinDetail = ({ user }) => {
               <p className="mt-3">{pinDetail.about}</p>
             </div>
             <Link
-              to={`/user-profile/${pinDetail?.postedBy._id}`}
+              to={`/user-profile/${pinDetail?.postedBy?._id}`}
               className="flex gap-2 mt-5 items-center bg-white rounded-lg "
             >
               <img
-                src={pinDetail?.postedBy.image}
+                src={pinDetail?.postedBy?.image}
                 className="w-8 h-8 rounded-full"
                 alt="user-profile"
               />
-              <p className="font-bold">{pinDetail?.postedBy.userName}</p>
+              <p className="font-bold">{pinDetail?.postedBy?.userName}</p>
             </Link>
+
             <h2 className="mt-5 text-2xl">Comments</h2>
-            <div className="max-h-370 overflow-y-auto">
+
+            <div className="  ">
               {pinDetail?.comments?.map((item) => (
-                <div
-                  className="flex gap-2 mt-5 items-center bg-white rounded-lg"
-                  key={item.comment}
-                >
-                  <img
-                    src={item.postedBy?.image}
-                    className="w-8 h-8 rounded-full cursor-pointer"
-                    alt="user-profile"
-                  />
-                  <div className="flex flex-col">
-                    <p className="font-bold">{item.postedBy?.userName}</p>
-                    <p>{item.comment}</p>
+                <div className="flex flex-col">
+                  <div
+                    className="flex gap-2 mt-5 items-center bg-white rounded-lg"
+                    key={item.comment}
+                  >
+                    <img
+                      src={item.postedBy?.image}
+                      className="w-8 h-8 rounded-full cursor-pointer"
+                      alt="user-profile"
+                    />
+                    <div className="flex flex-col">
+                      <p className="font-bold">{item.postedBy?.userName}</p>
+                      <p>{item.comment}</p>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="flex flex-wrap mt-6 gap-3">
-              <Link to={`/user-profile/${user._id}`}>
+
+            {/* Enter comment field */}
+            <div className="flex flex-wrap mt-6 gap-3 ">
+              <Link to={`/user-profile/${user?._id}`}>
                 <img
-                  src={user.image}
+                  src={user?.image}
                   className="w-10 h-10 rounded-full cursor-pointer"
                   alt="user-profile"
                 />
@@ -126,7 +135,9 @@ const PinDetail = ({ user }) => {
                 type="text"
                 placeholder="Add a comment"
                 value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
               />
               <button
                 type="button"

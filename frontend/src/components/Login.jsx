@@ -2,8 +2,8 @@ import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import shareVideo from "../assets/share.mp4";
-import homeLogo from "../assets/homeLogo.png";
+import login from "../assets/login.mp4";
+import logoipsum from "../assets/logoipsum.svg";
 import jwt_decode from "jwt-decode";
 import { client } from "../client";
 import "../index.css";
@@ -37,7 +37,7 @@ const Login = () => {
       <div className="flex h-screen w-screen ">
         <div className="flex w-screen">
           <video
-            src={shareVideo}
+            src={login}
             type="video/mp4"
             loopflex
             justify-start
@@ -52,7 +52,7 @@ const Login = () => {
         </div>
         <div className="absolute flex flex-col justify-center items-center backdrop-brightness-50 w-full h-full">
           <div className="">
-            <img src={homeLogo} alt="logo" width="130px" />
+            <img src={logoipsum} alt="logo" width="130px" />
           </div>
           <div className="shadow-2xl mt-3 flex rounded-lg bg-white">
             {user ? (

@@ -7,7 +7,7 @@ import { HiMenu } from "react-icons/hi";
 import Pins from "./Pins";
 import Navbar from "../components/Navbar";
 import { userQuery } from "../utils/data";
-import homeLogo from "../assets/homeLogo.png";
+import logoipsum from "../assets/logoipsum.svg";
 import { fetchUser } from "../utils/fetchUser";
 
 const Home = () => {
@@ -53,7 +53,7 @@ const Home = () => {
             onClick={() => setToggleSidebar(true)}
           />
           <Link to="/">
-            <img src={homeLogo} alt="logo" className="w-28" />
+            <img src={logoipsum} alt="logo" className="w-28" />
           </Link>
 
         </div>
