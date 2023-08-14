@@ -1,41 +1,37 @@
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GoogleLogin, googleLogout} from '@react-oauth/google'
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import shareVideo from "../assets/share.mp4";
 import homeLogo from "../assets/homeLogo.png";
-import jwt_decode from 'jwt-decode';
-import { client } from '../client';
+import jwt_decode from "jwt-decode";
+import { client } from "../client";
 import "../index.css";
 
 const Login = () => {
+  const navigate = useNavigate();
 
-  const navigate= useNavigate();
-  
   const responseGoogle = (response) => {
-    
     const decoded = jwt_decode(response.credential);
-    
-    localStorage.setItem('user',JSON.stringify(decoded));
 
-    const { name ,picture , sub} = decoded;
+    localStorage.setItem("user", JSON.stringify(decoded));
+
+    const { name, picture, sub } = decoded;
 
     const doc = {
-        _id:sub,
-        _type:'user',
-        userName: name,
-        image: picture,
-    }
-    
-    client.createIfNotExists(doc)
-          .then(()=>{
-            navigate('/',{replace:true})
-          })
-    
-      }
+      _id: sub,
+      _type: "user",
+      userName: name,
+      image: picture,
+    };
 
-  const user=false;
-  
+    client.createIfNotExists(doc).then(() => {
+      navigate("/", { replace: true });
+    });
+  };
+
+  const user = false;
+
   return (
     <GoogleOAuthProvider clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}>
       <div className="flex h-screen w-screen ">
@@ -59,20 +55,19 @@ const Login = () => {
             <img src={homeLogo} alt="logo" width="130px" />
           </div>
           <div className="shadow-2xl mt-3 flex rounded-lg bg-white">
-          {user ? (
-            <div> Logged In </div>
-          ): (
-            <GoogleLogin
-              onSuccess={(response)=>responseGoogle(response)}
-              onError={() => console.log('Error')}
-            />
-          )}
-          
+            {user ? (
+              <div> Logged In </div>
+            ) : (
+              <GoogleLogin
+                onSuccess={(response) => responseGoogle(response)}
+                onError={() => console.log("Error")}
+              />
+            )}
           </div>
         </div>
       </div>
     </GoogleOAuthProvider>
   );
-}
+};
 
 export default Login;

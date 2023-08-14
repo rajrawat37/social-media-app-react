@@ -47,7 +47,7 @@ const PinDetail = ({ user }) => {
           {
             comment,
             _key: uuidv4(),
-            postedBy: { _type: "postedBy", _ref: user._id },
+            postedBy: { _type: "postedBy", _ref: user?.sub },
           },
         ])
         .commit()
@@ -67,8 +67,7 @@ const PinDetail = ({ user }) => {
     <>
       {pinDetail && (
         <div
-          className="flex xl:flex-row flex-col m-auto bg-white"
-          style={{ maxWidth: "1500p" }}
+          className="flex flex-col  max-w-lg p-3 bg-white"
         >
           <div className="flex justify-center items-center md:items-start flex-initial">
             <img
@@ -140,6 +139,8 @@ const PinDetail = ({ user }) => {
           </div>
         </div>
       )}
+
+      {/* More like this */}
       {pins?.length > 0 && (
         <h2 className="text-center font-bold text-2xl mt-8 mb-4">
           More like this

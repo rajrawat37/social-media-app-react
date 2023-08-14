@@ -55,7 +55,7 @@ const Home = () => {
           <Link to="/">
             <img src={homeLogo} alt="logo" className="w-28" />
           </Link>
-          
+
         </div>
         {toggleSidebar && (
           <div className="fixed w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 transition duration-150 ease-in-out">
@@ -73,7 +73,7 @@ const Home = () => {
       
       <div className="pb-2 flex-1 h-screen  overflow-y-scroll" ref={scrollRef}>
         <Routes>
-          <Route path="/user-profile/:userId" element={<UserProfile />} />
+          <Route path="/user-profile/:userId" element={<UserProfile currUser={user && user}/>} />
           <Route path="/*" element={<Pins user={user && user} />} />
         </Routes>
       </div>
