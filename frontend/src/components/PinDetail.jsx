@@ -67,9 +67,9 @@ const PinDetail = ({ user }) => {
     <>
       {pinDetail && (
         <div
-          className="flex flex-col  max-w-lg p-3 bg-white"
+          className="flex flex-col xl:flex-row w-full p-3 bg-white"
         >
-          <div className="flex justify-center items-center md:items-start flex-initial">
+          <div className="flex justify-center max-w-lg items-center md:items-start flex-initial">
             <img
               className="rounded-t-lg mt-10 rounded-b-lg"
               src={pinDetail?.image && urlFor(pinDetail?.image).url()}
