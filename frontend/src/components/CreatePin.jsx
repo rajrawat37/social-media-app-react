@@ -20,6 +20,7 @@ const CreatePin = ({ user }) => {
   const navigate = useNavigate();
 
   const uploadImage = (e) => {
+    console.log("Uploading in progress");
     const selectedFile = e.target.files[0];
     // uploading asset to sanity
     if (
@@ -51,7 +52,6 @@ const CreatePin = ({ user }) => {
 
   const savePin = () => {
     if (title && about && destination && imageAsset?._id && category) {
-    
       const doc = {
         _type: "pin",
         title,
@@ -72,7 +72,7 @@ const CreatePin = ({ user }) => {
         category,
       };
 
-      console.log("User doc is here " , doc);
+      console.log("User doc is here ", doc);
 
       client.create(doc).then(() => {
         navigate("/");
@@ -86,6 +86,7 @@ const CreatePin = ({ user }) => {
       }, 2000);
     }
   };
+
   return (
     <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5">
       {fields && (

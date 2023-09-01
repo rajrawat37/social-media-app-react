@@ -15,9 +15,10 @@ function Feed() {
   useEffect(() => {
     setLoading(true);
     
+    console.log("First mount in categories Feed page!", categoryId);
+    
     if (categoryId) {
       const query = searchQuery(categoryId);
-
       client.fetch(query).then((data) => {
         setPins(data);
         setLoading(false);

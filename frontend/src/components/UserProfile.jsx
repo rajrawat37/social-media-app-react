@@ -55,10 +55,9 @@ const UserProfile = (currUser) => {
   }, [text, userId]);
 
   const removeUser = () => {
-      localStorage.clear();
-      navigate("/login");
+    localStorage.clear();
+    navigate("/login");
   };
-
 
   if (!user) return <Spinner message="Loading profile" />;
 
