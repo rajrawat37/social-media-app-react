@@ -27,8 +27,8 @@ const Login = () => {
 
     client.createIfNotExists(doc).then(() => {
       console.log("🌼 Creating client 🌼");
-      navigate("/", { replace: true });
     });
+    navigate("/",{replace: true});
   };
 
   const user = false;

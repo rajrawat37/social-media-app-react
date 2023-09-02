@@ -56,6 +56,7 @@ const UserProfile = (currUser) => {
 
   const removeUser = () => {
     localStorage.clear();
+    googleLogout();
     navigate("/login");
   };
 
