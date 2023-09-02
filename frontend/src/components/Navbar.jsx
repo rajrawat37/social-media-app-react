@@ -10,7 +10,7 @@ import { Sling as Hamburger } from "hamburger-react";
 import React, { useState, useRef, useEffect } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import { Sidebar } from ".";
+import {Sidebar} from  "./index";
 
 const Navbar = ({ user, searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();
@@ -65,6 +65,7 @@ const Navbar = ({ user, searchTerm, setSearchTerm }) => {
           </Link>
         </div>
       </div>
+
       {toggleSidebar && (
         <div className="fixed w-1/6  overflow-y-auto h-screen shadow-md z-10 animate-slide-in">
           <div className="absolute w-full flex justify-end items-center p-2">

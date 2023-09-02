@@ -5,7 +5,6 @@ import { Sidebar, UserProfile } from "../components/";
 import { client } from "../client";
 import { HiMenu } from "react-icons/hi";
 import Pins from "./Pins";
-import Navbar from "../components/Navbar";
 import { userQuery } from "../utils/data";
 import logoipsum from "../assets/logoipsum.svg";
 import { fetchUser } from "../utils/fetchUser";
@@ -15,7 +14,7 @@ const Home = () => {
   const [user, setUser] = useState();
   const scrollRef = useRef(null);
 
-  const userInfo = fetchUser();
+  const userInfo = fetchUser();   //fetch User from localstorage
 
   // console.log("User info is : ", userInfo);
 
@@ -31,6 +30,7 @@ const Home = () => {
       setUser(data[0]);
     })();
   }, []);
+
 
   useEffect(() => {
     scrollRef.current.scrollTo(0, 0);

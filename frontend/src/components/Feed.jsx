@@ -11,10 +11,12 @@ function Feed() {
   const [pins, setPins] = useState(null);
 
   const { categoryId } = useParams();
+  console.log("🛠️ category Id is : 🛠️", categoryId)
 
   useEffect(() => {
     setLoading(true);
     
+    console.log("✅ Reached ✅");
     console.log("First mount in categories Feed page!", categoryId);
     
     if (categoryId) {

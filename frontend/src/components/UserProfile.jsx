@@ -11,6 +11,7 @@ import {
 import { client } from "../client";
 import MasonryLayout from "./MasonryLayout";
 import Spinner from "./Spinner";
+import { fetchUser } from "../utils/fetchUser";
 
 const activeBtnStyles =
   "bg-red-500 text-white font-bold p-2 rounded-full w-32 outline-none";
@@ -25,10 +26,9 @@ const UserProfile = (currUser) => {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  const User =
-    localStorage.getItem("user") !== "undefined"
-      ? JSON.parse(localStorage.getItem("user"))
-      : localStorage.clear();
+  const User = fetchUser();
+
+
   console.log("User is here : ", User);
 
   useEffect(() => {

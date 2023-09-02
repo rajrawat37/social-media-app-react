@@ -26,6 +26,7 @@ const Login = () => {
     };
 
     client.createIfNotExists(doc).then(() => {
+      console.log("🌼 Creating client 🌼");
       navigate("/", { replace: true });
     });
   };
