@@ -40,7 +40,7 @@ const Home = () => {
     <div className="flex bg-gray-50 md:flex-row  flex-col h-screen">
       
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex h-screen ">
+      <div className="hidden md:flex h-screen">
         <Sidebar user={user && user} />
       </div>
 
@@ -71,9 +71,12 @@ const Home = () => {
         )}
       </div>
       
+      {/* Home Component*/}
       <div className="pb-2 flex-1 h-screen  overflow-y-scroll" ref={scrollRef}>
         <Routes>
           <Route path="/user-profile/:userId" element={<UserProfile currUser={user && user}/>} />
+
+           {/* if the path does not matches any of the above routes then below one will be executed*/}
           <Route path="/*" element={<Pins user={user && user} />} />
         </Routes>
       </div>

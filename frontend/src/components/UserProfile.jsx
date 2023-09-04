@@ -26,32 +26,28 @@ const UserProfile = (currUser) => {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  const User = fetchUser();
+  const loggedInUser = fetchUser();
 
-
-  console.log("User is here : ", User);
-
+  //whenever userid is changed this will be executed
   useEffect(() => {
     const query = userQuery(userId);
     client.fetch(query).then((data) => {
       setUser(data[0]);
     });
+    console.log("LoggedInUser is here : ", loggedInUser);
+    console.log("Queried User is  : ", user);
   }, [userId]);
 
+  //whenever text ot user id is changed this hook will be executed
   useEffect(() => {
-    if (text === "Created") {
-      const createdPinsQuery = userCreatedPinsQuery(userId);
+    const PinsQuery =
+      text === "Created"
+        ? userCreatedPinsQuery(userId)
+        : userSavedPinsQuery(userId);
 
-      client.fetch(createdPinsQuery).then((data) => {
-        setPins(data);
-      });
-    } else {
-      const savedPinsQuery = userSavedPinsQuery(userId);
-
-      client.fetch(savedPinsQuery).then((data) => {
-        setPins(data);
-      });
-    }
+    client.fetch(PinsQuery).then((data) => {
+      setPins(data);
+    });
   }, [text, userId]);
 
   const removeUser = () => {
@@ -82,12 +78,12 @@ const UserProfile = (currUser) => {
             {user.userName}
           </h1>
           <div className="absolute top-0 z-1 right-0 p-2">
-            {JSON.stringify(userId) === JSON.stringify(User.sub) && (
+          {/* check If the person who has logged in wants to log out or if it is another person*/}
+            {JSON.stringify(userId) === JSON.stringify(loggedInUser.sub) && (
               <button
                 type="button"
                 className=" bg-white p-2 rounded-full cursor-pointer outline-none shadow-md"
                 onClick={() => {
-                  googleLogout();
                   removeUser();
                 }}
               >

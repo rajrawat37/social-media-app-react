@@ -1,6 +1,6 @@
 import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import login from "../assets/login.mp4";
 import logoipsum from "../assets/logoipsum.svg";
@@ -12,12 +12,17 @@ const Login = () => {
   const navigate = useNavigate();
 
   const responseGoogle = (response) => {
+
+    //decode the response credentials
     const decoded = jwt_decode(response.credential);
 
+    //setting user data to localStorage
     localStorage.setItem("user", JSON.stringify(decoded));
 
+    // destruct the {name,pic,sub}
     const { name, picture, sub } = decoded;
 
+    //creating a doc of type user
     const doc = {
       _id: sub,
       _type: "user",
@@ -25,9 +30,12 @@ const Login = () => {
       image: picture,
     };
 
+    //creating a doc if it does not exist
     client.createIfNotExists(doc).then(() => {
       console.log("🌼 Creating client 🌼");
     });
+    
+    //navigate to home page
     navigate("/",{replace: true});
   };
 

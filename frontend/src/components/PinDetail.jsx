@@ -19,12 +19,14 @@ const PinDetail = ({ user }) => {
   console.log("user details are :", user?._id);
 
   const fetchPinDetails = () => {
+    
+    console.log("Comment added ? ", comment);
     const query = pinDetailQuery(pinId);
 
     if (query) {
       client.fetch(`${query}`).then((data) => {
         setPinDetail(data[0]);
-        console.log(data);
+        console.log("🎈 Fetched Pin Details are🎈" , data[0]);
         if (data[0]) {
           const query1 = pinDetailMorePinQuery(data[0]);
           client.fetch(query1).then((res) => {
@@ -49,11 +51,12 @@ const PinDetail = ({ user }) => {
         .insert("after", "comments[-1]", [
           {
             comment,
-            _key: uuidv4(),
             postedBy: { _type: "postedBy", _ref: user?._id },
           },
         ])
-        .commit()
+        .commit({
+          autoGenerateArrayKeys: true,
+        })
         .then(() => {
           fetchPinDetails();
           setComment("");
@@ -65,7 +68,7 @@ const PinDetail = ({ user }) => {
   if (!pinDetail) {
     return <Spinner message="Showing pin" />;
   }
-  console.log("Hello it is here ", pinDetail);
+ 
 
   return (
     <>
