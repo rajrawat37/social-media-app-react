@@ -1,7 +1,3 @@
 # About
-A Pinterest clone made in React !
-
-
-
-# View
-https://social-media-pin.netlify.app/login
+🎯An app like pinterest built in React !
+🔗 Link : https://social-media-pin.netlify.app/
