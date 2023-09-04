@@ -4,13 +4,14 @@ import {deskTool} from 'sanity/desk'
 import {schemaTypes} from './schemas/index.js'
 import {getStartedPlugin} from './plugins/sanity-plugin-tutorial'
 
+
 const devOnlyPlugins = [getStartedPlugin()]
 
 export default defineConfig({
   name: 'default',
-  title: 'darkred-clam',
+  title: 'social-media-pins',
 
-  projectId: 'jdhqgotg',
+  projectId:'jdhqgotg',
   dataset: 'production',
 
   plugins: [deskTool(), visionTool(), ...(isDev ? devOnlyPlugins : [])],
