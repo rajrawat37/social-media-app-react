@@ -10,37 +10,50 @@ function Feed() {
   const [loading, setLoading] = useState(true);
   const [pins, setPins] = useState(null);
 
-  const { categoryId } = useParams();
-  console.log("🛠️ category Id is : 🛠️", categoryId)
-
   useEffect(() => {
     setLoading(true);
-    
-    console.log("✅ Reached ✅");
-    console.log("First mount in categories Feed page!", categoryId);
-    
-    if (categoryId) {
-      const query = searchQuery(categoryId);
-      client.fetch(query).then((data) => {
-        setPins(data);
+
+    console.log("✅ Feed Page is Loaded ✅");
+
+    const fetchImages = async () => {
+      const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+
+      if (!accessKey) {
+        console.error("❌ Unsplash Access Key is missing!");
+        return;
+      }
+
+      try {
+        let allImages = [];
+        const totalPages = 7; // fetch 3 pages (50 x 10 = 500 images)
+
+        for (let page = 1; page <= totalPages; page++) {
+          const response = await fetch(
+            `https://api.unsplash.com/photos?page=${page}&per_page=50&client_id=${accessKey}`
+          );
+
+          const data = await response.json();
+          allImages = [...allImages, ...data];
+        }
+
+        setPins(allImages);
         setLoading(false);
-      });
-    } else {
-      client.fetch(feedQuery).then((data) => {
-        setPins(data);
-        setLoading(false);
-      });
-    }
-  }, [categoryId]);
+      } catch (error) {
+        console.error("🚫 Error fetching images:", error);
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   if (loading)
     return <Spinner message="We are adding new ideas in your feed" />;
 
-  return <div>
+  return (
     <div>
-      {pins && <MasonryLayout pins={pins}/>}
+      <div>{pins && <MasonryLayout pins={pins} />}</div>
     </div>
-  </div>;
+  );
 }
 
 export default Feed;

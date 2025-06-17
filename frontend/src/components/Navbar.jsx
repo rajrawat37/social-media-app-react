@@ -1,16 +1,14 @@
-import { HiMenu } from "react-icons/hi";
 import {
   IoAddCircleOutline,
   IoBookmarksOutline,
   IoSearch,
 } from "react-icons/io5";
-import { AiFillCloseCircle } from "react-icons/ai";
 import { BiPlus } from "react-icons/bi";
 import { Sling as Hamburger } from "hamburger-react";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import {Sidebar} from  "./index";
+import { Sidebar } from "./index";
 
 const Navbar = ({ user, searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();

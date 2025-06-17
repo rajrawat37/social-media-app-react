@@ -2,6 +2,7 @@ import React from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import login from "../assets/login.mp4";
 import logoipsum from "../assets/logoipsum.svg";
 import jwt_decode from "jwt-decode";
@@ -11,32 +12,60 @@ import "../index.css";
 const Login = () => {
   const navigate = useNavigate();
 
-  const responseGoogle = (response) => {
-
+  const responseGoogle = async (response) => {
     //decode the response credentials
-    const decoded = jwt_decode(response.credential);
+
+    const token = response.credential;
+    localStorage.setItem("token", token);
+    console.log("🔐 -- 🔐", token);
+
+    const decoded = jwt_decode(token);
+    console.log("🔐 -- ✅", decoded);
 
     //setting user data to localStorage
+    //Keeps the user logged in even after refreshing or revisiting the page.
+    //You don't need to decode the token every time — just read from localStorage.
     localStorage.setItem("user", JSON.stringify(decoded));
 
     // destruct the {name,pic,sub}
-    const { name, picture, sub } = decoded;
+    const { email, name, picture, sub } = decoded;
 
-    //creating a doc of type user
-    const doc = {
-      _id: sub,
-      _type: "user",
-      userName: name,
-      image: picture,
-    };
+    // Sending response to backend API
+    try {
+      const res = await fetch("http://localhost:4000/api/auth/authGoogle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          _id: sub,
+          userName: name,
+          image: picture,
+          email: email,
+        }),
+      });
 
-    //creating a doc if it does not exist
-    client.createIfNotExists(doc).then(() => {
-      console.log("🌼 Creating client 🌼");
-    });
-    
-    //navigate to home page
-    navigate("/",{replace: true});
+      if (!res.ok) {
+        throw new Error("❌ Failed to save user ❌");
+      }
+
+      if (res.status === 201) {
+        toast.success("User registered!", {
+          autoClose: 1500, // Toast closes after 1.5 seconds
+        });
+      } else if (res.status === 200) {
+        toast.info("User logged in!", {
+          autoClose: 1500, // Toast closes after 1.5 seconds
+        });
+      } else {
+        toast.warning("Unexpected response", {
+          autoClose: 1500, // Toast closes after 1.5 seconds
+        });
+      }
+    } catch (error) {
+      toast.error("🚫 Error saving user!");
+    }
+
+    //navigate to Home page
+    navigate("/", { replace: true });
   };
 
   const user = false;
@@ -67,10 +96,13 @@ const Login = () => {
             {user ? (
               <div> Logged In </div>
             ) : (
-              <GoogleLogin
-                onSuccess={(response) => responseGoogle(response)}
-                onError={() => console.log("Error")}
-              />
+              <>
+                {/* This is Google Login Button component */}
+                <GoogleLogin
+                  onSuccess={(response) => responseGoogle(response)}
+                  onError={() => console.log("Error")}
+                />
+              </>
             )}
           </div>
         </div>
