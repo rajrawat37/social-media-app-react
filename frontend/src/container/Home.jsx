@@ -14,23 +14,9 @@ const Home = () => {
   const [user, setUser] = useState();
   const scrollRef = useRef(null);
 
-  const userInfo = fetchUser();   //fetch User from localstorage
+  const userInfo = fetchUser(); //fetch User from localstorage
 
   // console.log("User info is : ", userInfo);
-
-  useEffect(() => {
-    (async () => {
-      // console.log("Id is : ", userInfo?.sub);
-      const query = userQuery(userInfo?.sub);
-
-      // console.log("Query is : ", query);
-      const data = await client.fetch(`${query}`);
-      console.log("Data is : ", data[0]);
-
-      setUser(data[0]);
-    })();
-  }, []);
-
 
   useEffect(() => {
     scrollRef.current.scrollTo(0, 0);
@@ -38,7 +24,6 @@ const Home = () => {
 
   return (
     <div className="flex bg-gray-50 md:flex-row  flex-col h-screen">
-      
       {/* Desktop Sidebar */}
       <div className="hidden md:flex h-screen">
         <Sidebar user={user && user} />
@@ -55,7 +40,6 @@ const Home = () => {
           <Link to="/">
             <img src={logoipsum} alt="logo" className="w-28" />
           </Link>
-
         </div>
         {toggleSidebar && (
           <div className="fixed w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 transition duration-150 ease-in-out">
@@ -70,17 +54,19 @@ const Home = () => {
           </div>
         )}
       </div>
-      
+
       {/* Home Component*/}
       <div className="pb-2 flex-1 h-screen  overflow-y-scroll" ref={scrollRef}>
         <Routes>
-          <Route path="/user-profile/:userId" element={<UserProfile currUser={user && user}/>} />
+          <Route
+            path="/user-profile/:userId"
+            element={<UserProfile user={userInfo} />}
+          />
 
-           {/* if the path does not matches any of the above routes then below one will be executed*/}
-          <Route path="/*" element={<Pins user={user && user} />} />
+          {/* if the path does not matches any of the above routes then below one will be executed*/}
+          <Route path="/*" element={<Pins user={userInfo} />} />
         </Routes>
       </div>
-      
     </div>
   );
 };

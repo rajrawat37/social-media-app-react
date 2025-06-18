@@ -10,6 +10,7 @@ const PinDetail = ({ user }) => {
   const [comment, setComment] = useState("");
   const [pinComments, setPinComments] = useState([]);
   const [addingComment, setAddingComment] = useState(false);
+  console.log("✅ ✅ ✅ ", user?.picture);
 
   // const user = JSON.parse(localStorage.getItem("user"));
 
@@ -63,10 +64,6 @@ const PinDetail = ({ user }) => {
   const addComment = async () => {
     if (!comment.trim()) return;
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = localStorage.getItem("token");
-
-    console.log("✅ ✅ ✅ ", user);
     console.log("PinId is : ", pinId);
 
     try {
@@ -149,6 +146,7 @@ const PinDetail = ({ user }) => {
           <div className="flex gap-2 mt-5 items-center bg-white rounded-lg">
             <img
               src={profileImg}
+              referrerPolicy="no-referrer"
               className="w-8 h-8 rounded-full"
               alt="user-profile"
             />
@@ -201,7 +199,8 @@ const PinDetail = ({ user }) => {
           <div className="flex flex-wrap mt-6 gap-3">
             <Link to={`/user-profile/${id}`}>
               <img
-                src={user?.image}
+                src={user.picture}
+                referrerPolicy="no-referrer"
                 className="w-10 h-10 rounded-full cursor-pointer"
                 alt="user-profile"
               />

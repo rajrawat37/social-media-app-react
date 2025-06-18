@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 import { MdDownloadForOffline } from "react-icons/md";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
 
-import { client, urlFor } from "../client";
-
-const Pin = ({ pin }) => {
+const Pin = ({ disable, pin, isSaved, refreshSavedPins }) => {
   const [postHovered, setPostHovered] = useState(false);
-  const [savingPost, setSavingPost] = useState(false);
 
   const navigate = useNavigate();
 
-  // const { postedBy, image, _id, destination } = pin;
   const {
     id,
     alt_description,
@@ -30,48 +25,39 @@ const Pin = ({ pin }) => {
       ? JSON.parse(localStorage.getItem("user"))
       : localStorage.clear();
 
-  // console.log(postHovered , "hello it is hovered");
-
   // function to delete Pin
-  const deletePin = (id) => {
-    client.delete(id).then(() => {
-      window.location.reload();
-    });
-  };
-
-  // console.log(user , "google id");
-
-  // let alreadySaved = pin?.save?.filter(
-  //   (item) => item?.postedBy?._id === user?.sub
-  // );
-
-  // alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
-
-  // function to save Pin
-  // const savePin = (id) => {
-  //   if (alreadySaved?.length === 0) {
-  //     setSavingPost(true);
-
-  //     client
-  //       .patch(id)
-  //       .setIfMissing({ save: [] })
-  //       .insert("after", "save[-1]", [
-  //         {
-  //           _key: uuidv4(),
-  //           userId: user?.sub,
-  //           postedBy: {
-  //             _type: "postedBy",
-  //             _ref: user?.sub,
-  //           },
-  //         },
-  //       ])
-  //       .commit()
-  //       .then(() => {
-  //         window.location.reload();
-  //         setSavingPost(false);
-  //       });
-  //   }
+  // const deletePin = (id) => {
+  //   client.delete(id).then(() => {
+  //     window.location.reload();
+  //   });
   // };
+
+  // function to savePin to Profile
+
+  const savePinToProfile = async (userId, pinId, refreshSavedPins) => {
+    console.log("savePinToProfile Function -> userId : ", userId);
+    console.log("savePinToProfile Function -> pinId : ", pinId);
+
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/pins/saved/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ pinId }),
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Pin is already saved");
+      }
+      refreshSavedPins();
+    } catch (error) {
+      console.error("❌ Error saving pin:", error.message);
+    }
+  };
 
   return (
     <div className="m-2">
@@ -106,27 +92,29 @@ const Pin = ({ pin }) => {
               >
                 <MdDownloadForOffline />
               </a>
+
               {/* Saved Icon */}
 
-              {/* {alreadySaved?.length !== 0 ? (
-                <button
-                  type="button"
-                  className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
-                >
-                  {pin?.save?.length} Saved
-                </button>
-              ) : (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    savePin(_id);
-                  }}
-                  type="button"
-                  className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
-                >
-                  {pin?.save?.length} {savingPost ? "Saving" : "Save"}
-                </button>
-              )} */}
+              {!disable &&
+                (isSaved ? (
+                  <button
+                    type="button"
+                    className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
+                  >
+                    Saved
+                  </button>
+                ) : (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      savePinToProfile(user.sub, id, refreshSavedPins);
+                    }}
+                    type="button"
+                    className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
+                  >
+                    Save
+                  </button>
+                ))}
             </div>
 
             {/* LinkIcon */}
@@ -145,7 +133,7 @@ const Pin = ({ pin }) => {
 
               {/* Delete Icon */}
 
-              {JSON.stringify(postedBy?._id) === JSON.stringify(user?.sub) && (
+              {/* {JSON.stringify(postedBy?._id) === JSON.stringify(user?.sub) && (
                 <button
                   type="button"
                   onClick={(e) => {
@@ -156,7 +144,7 @@ const Pin = ({ pin }) => {
                 >
                   <AiTwotoneDelete />
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         )}

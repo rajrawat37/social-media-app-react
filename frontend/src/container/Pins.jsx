@@ -17,7 +17,7 @@ function Pins({ user }) {
       </div>
       <div className="max-h-max ">
         <Routes>
-          <Route path="/" element={<Feed />}></Route>
+          <Route path="/" element={<Feed userId={user.sub} />}></Route>
           <Route path="/category/:categoryId" element={<Feed />}></Route>
           <Route
             path="/pin-detail/:pinId"

@@ -3,11 +3,6 @@ import { AiOutlineLogout } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import { googleLogout } from "@react-oauth/google";
 
-import {
-  userCreatedPinsQuery,
-  userQuery,
-  userSavedPinsQuery,
-} from "../utils/data";
 import { client } from "../client";
 import MasonryLayout from "./MasonryLayout";
 import Spinner from "./Spinner";
@@ -18,37 +13,47 @@ const activeBtnStyles =
 const notActiveBtnStyles =
   "bg-primary mr-4 text-black font-bold p-2 rounded-full w-32 outline-none";
 
-const UserProfile = (currUser) => {
-  const [user, setUser] = useState();
-  const [pins, setPins] = useState();
+const UserProfile = ({ user }) => {
+  // const [user, setUser] = useState();
   const [text, setText] = useState("Created");
+  const [savedPins, setSavedPins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [bgUrl, setBgUrl] = useState("");
   const [activeBtn, setActiveBtn] = useState("created");
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  const loggedInUser = fetchUser();
+  const fetchSavedPins = async () => {
+    const res = await fetch(`http://localhost:4000/api/pins/saved/${userId}`);
+    const data = await res.json();
+    const pinIds = data.savedPins; // array of pin IDs
+    fetchUnsplashPins(pinIds); // call Unsplash after getting pins
+  };
 
-  //whenever userid is changed this will be executed
+  const fetchUnsplashPins = async (pinIds) => {
+    try {
+      const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+
+      const unsplashData = await Promise.all(
+        pinIds.map(async (id) => {
+          const res = await fetch(
+            `https://api.unsplash.com/photos/${id}?client_id=${accessKey}`
+          );
+          return res.ok ? res.json() : null;
+        })
+      );
+
+      const filtered = unsplashData.filter(Boolean); // remove nulls
+      setSavedPins(filtered); // state for displaying images
+    } catch (err) {
+      console.error("Error fetching from Unsplash:", err);
+    }
+  };
+
   useEffect(() => {
-    const query = userQuery(userId);
-    client.fetch(query).then((data) => {
-      setUser(data[0]);
-    });
-    console.log("LoggedInUser is here : ", loggedInUser);
-    console.log("Queried User is  : ", user);
-  }, [userId]);
-
-  //whenever text ot user id is changed this hook will be executed
-  useEffect(() => {
-    const PinsQuery =
-      text === "Created"
-        ? userCreatedPinsQuery(userId)
-        : userSavedPinsQuery(userId);
-
-    client.fetch(PinsQuery).then((data) => {
-      setPins(data);
-    });
-  }, [text, userId]);
+    fetchSavedPins();
+    console.log(user);
+  }, []);
 
   const removeUser = () => {
     localStorage.clear();
@@ -64,32 +69,29 @@ const UserProfile = (currUser) => {
         <div className="relative flex flex-col mb-7">
           <div className="flex flex-col justify-center items-center">
             <img
-              className=" w-full h-60 2xl:h-510 shadow-lg object-cover"
-              src="https://source.unsplash.com/1600x900/?hills,clouds"
+              className="w-full h-60 2xl:h-510 shadow-lg object-cover"
+              src="https://picsum.photos/800/600"
               alt="user-pic"
             />
+
             <img
               className="rounded-full w-20 h-20 -mt-10 shadow-xl object-cover"
-              src={user.image}
-              alt="user-pic"
+              referrerPolicy="no-referrer"
+              src={user.picture}
+              alt="dp"
             />
           </div>
-          <h1 className="font-bold text-3xl text-center mt-3">
-            {user.userName}
-          </h1>
+          <h1 className="font-bold text-3xl text-center mt-3">{user.name}</h1>
           <div className="absolute top-0 z-1 right-0 p-2">
-          {/* check If the person who has logged in wants to log out or if it is another person*/}
-            {JSON.stringify(userId) === JSON.stringify(loggedInUser.sub) && (
-              <button
-                type="button"
-                className=" bg-white p-2 rounded-full cursor-pointer outline-none shadow-md"
-                onClick={() => {
-                  removeUser();
-                }}
-              >
-                <AiOutlineLogout color="red" fontSize={21} />
-              </button>
-            )}
+            <button
+              type="button"
+              className=" bg-white p-2 rounded-full cursor-pointer outline-none shadow-md"
+              onClick={() => {
+                removeUser();
+              }}
+            >
+              <AiOutlineLogout color="red" fontSize={21} />
+            </button>
           </div>
         </div>
         <div className="text-center mb-7">
@@ -118,12 +120,13 @@ const UserProfile = (currUser) => {
             Saved
           </button>
         </div>
-
+        {/* To display saved Pins of the logged in User */}
         <div className="px-2">
-          <MasonryLayout pins={pins} />
+          <MasonryLayout disable={true} pins={savedPins} userId={userId} />
         </div>
 
-        {pins?.length === 0 && (
+        {/* Display message if no pins are found */}
+        {savedPins?.length === 0 && (
           <div className="flex justify-center font-bold items-center w-full text-1xl mt-2">
             No Pins Found!
           </div>

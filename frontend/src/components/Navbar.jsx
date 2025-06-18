@@ -5,7 +5,7 @@ import {
 } from "react-icons/io5";
 import { BiPlus } from "react-icons/bi";
 import { Sling as Hamburger } from "hamburger-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { Sidebar } from "./index";
@@ -14,6 +14,11 @@ const Navbar = ({ user, searchTerm, setSearchTerm }) => {
   const navigate = useNavigate();
 
   const [toggleSidebar, setToggleSidebar] = useState(false);
+
+  useEffect(() => {
+    console.log("✅ Navbar File is loaded ✅ ");
+    console.log(user.picture);
+  });
 
   if (!user) return null;
 
@@ -24,15 +29,15 @@ const Navbar = ({ user, searchTerm, setSearchTerm }) => {
   return (
     <>
       <div className="flex  py-2 w-full bg-white justify-between">
-        <div class=" w-5/6">
-          <div class=" flex text-gray-600 ">
+        <div className=" w-5/6">
+          <div className=" flex text-gray-600 ">
             <input
               type="text"
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search"
               value={searchTerm}
               onFocus={() => navigate("/Search")}
-              class="bg-gray-100 h-10 mt-1 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
+              className="bg-gray-100 h-10 mt-1 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
             />
             <IoSearch
               fontSize={22}
@@ -57,11 +62,18 @@ const Navbar = ({ user, searchTerm, setSearchTerm }) => {
             className="mt-2 mr-8 cursor-pointer"
           />
         </Link>
-        <div className="mr-3">
-          <Link to={`user-profile/${user?._id}`}>
-            <img src={user?.image} alt="logo" className="w-10 rounded-full " />
-          </Link>
-        </div>
+        {user?.picture && (
+          <div className="mr-3">
+            <Link to={`user-profile/${user?.sub}`}>
+              <img
+                src={user?.picture}
+                alt="logo"
+                referrerPolicy="no-referrer"
+                className="w-10 rounded-full "
+              />
+            </Link>
+          </div>
+        )}
       </div>
 
       {toggleSidebar && (

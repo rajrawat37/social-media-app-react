@@ -53,7 +53,7 @@ const Login = () => {
         });
       } else if (res.status === 200) {
         toast.info("User logged in!", {
-          autoClose: 1500, // Toast closes after 1.5 seconds
+          autoClose: 500, // Toast closes after 1.5 seconds
         });
       } else {
         toast.warning("Unexpected response", {

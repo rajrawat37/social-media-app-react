@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
-import { client } from "../client";
 import MasonryLayout from "./MasonryLayout";
 import Spinner from "./Spinner";
-import { feedQuery, searchQuery } from "../utils/data";
 
-function Feed() {
+function Feed({ userId }) {
   const [loading, setLoading] = useState(true);
   const [pins, setPins] = useState(null);
 
@@ -16,33 +12,23 @@ function Feed() {
     console.log("✅ Feed Page is Loaded ✅");
 
     const fetchImages = async () => {
-      const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
-
-      if (!accessKey) {
-        console.error("❌ Unsplash Access Key is missing!");
-        return;
-      }
-
       try {
-        let allImages = [];
-        const totalPages = 7; // fetch 3 pages (50 x 10 = 500 images)
+        const response = await fetch("http://localhost:4000/api/unsplash/all", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
 
-        for (let page = 1; page <= totalPages; page++) {
-          const response = await fetch(
-            `https://api.unsplash.com/photos?page=${page}&per_page=50&client_id=${accessKey}`
-          );
+        console.log("Feed Page data format : ", data);
 
-          const data = await response.json();
-          allImages = [...allImages, ...data];
-        }
-
-        setPins(allImages);
+        setPins(data);
         setLoading(false);
       } catch (error) {
-        console.error("🚫 Error fetching images:", error);
+        console.error("❌ Error fetching from backend:", error.message);
       }
     };
-
     fetchImages();
   }, []);
 
@@ -51,7 +37,9 @@ function Feed() {
 
   return (
     <div>
-      <div>{pins && <MasonryLayout pins={pins} />}</div>
+      <div>
+        {pins && <MasonryLayout disable={false} pins={pins} userId={userId} />}
+      </div>
     </div>
   );
 }
