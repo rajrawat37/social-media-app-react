@@ -5,12 +5,16 @@ import { connectDB } from "./config/db.js";
 
 import authRouter from "./routes/authRouter.js";
 import commentRouter from "./routes/commentRouter.js";
+import pinRouter from "./routes/pinRouter.js";
+import unsplashRouter from "./routes/unsplashRouter.js";
 
-import "dotenv/config";
-
+import dotenv from "dotenv";
+dotenv.config();
 //app config
 const app = express(); //creates an instance of an Express application
 const port = 4000;
+
+console.log("Loaded key:", process.env.UNSPLASH_ACCESS_KEY);
 
 //middleware
 //app.use() is used to add middleware to the Express application.
@@ -39,6 +43,10 @@ connectDB(); //connection with mongooseeeeee
 app.use("/api/auth", authRouter);
 
 app.use("/api/comments", commentRouter);
+
+app.use("/api/pins", pinRouter);
+
+app.use("/api/unsplash", unsplashRouter);
 
 // app.use("/pinDetails", pinDetails);
 // The string "/api/food" is a base path. It means that all routes defined in foodRouter will be prefixed with /api/food.
