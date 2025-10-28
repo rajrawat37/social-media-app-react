@@ -11,7 +11,7 @@ import "../index.css";
 const Login = () => {
   const navigate = useNavigate();
 
-  const responseGoogle = (response) => {
+  const responseGoogle = async (response) => {
 
     //decode the response credentials
     const decoded = jwt_decode(response.credential);
@@ -31,10 +31,10 @@ const Login = () => {
     };
 
     //creating a doc if it does not exist
-    client.createIfNotExists(doc).then(() => {
+    await client.createIfNotExists(doc).then(() => {
       console.log("🌼 Creating client 🌼");
     });
-    
+
     //navigate to home page
     navigate("/",{replace: true});
   };
